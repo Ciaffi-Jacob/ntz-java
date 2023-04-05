@@ -37,7 +37,7 @@ public final class Notez {
          * of method calls that manipulate the Notez engine.
          * See the first one:
          */
-      //  ntzEngine.loadDemoEntries();
+      //ntzEngine.loadDemoEntries();
 
 
 
@@ -49,8 +49,10 @@ public final class Notez {
                 System.out.println(argv[0]);
                 System.out.println(argv[1]);
                 ntzEngine.addToCategory("General", argv);
-            } else {
-
+            } else if(argv[0].equals("-c")){
+                ntzEngine.addToCategory(argv[1], argv);
+            } else if (argv[0].equals("-f")) {
+                ntzEngine.forgetNote(argv[1], Integer.parseInt(argv[2]));
             }
             // this should give you an idea about how to TEST the Notez engine
               // without having to spend lots of time messing with command line arguments.
@@ -63,7 +65,17 @@ public final class Notez {
     }
 
     private void addToCategory(String category, String[] argv) {
-        filemap.get(category).add(argv[1]);
+        if(filemap.containsKey(category))
+        filemap.get(category).add(argv[argv.length-1]);
+        else {
+            filemap.put(category, new NoteList(argv[argv.length-1]));
+        }
+    }
+    private void forgetNote(String category, int index){
+            filemap.get(category).remove(index);
+        if (filemap.get(category).size() == 0){
+            filemap.remove(category);
+        }
     }
 
     private void saveDatabase() {
